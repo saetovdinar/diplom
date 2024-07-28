@@ -10,8 +10,6 @@ export default class Timeline {
         this.videoPost();
         this.audioPost();
         this.textPost();
-        this.cancelBtn();
-        this.submitBtn();
     }
     videoPost() {
         const recordVideoBtn = document.querySelector('.video_record');
@@ -19,6 +17,8 @@ export default class Timeline {
         
         recordVideoBtn.addEventListener('click', async (event) => {
             event.preventDefault();
+            
+            
             const media = await navigator.mediaDevices.getUserMedia({
                 video: true,
         });
@@ -52,6 +52,7 @@ export default class Timeline {
 
             stopVideoBtn.addEventListener('click', async (event) => {
                 event.preventDefault();
+
                 recorder.stop();
                 media.getTracks().forEach(track => track.stop());
        
@@ -66,6 +67,7 @@ export default class Timeline {
        
         recordAudioBtn.addEventListener('click', async (event) => {
             event.preventDefault();
+            
             const media = await navigator.mediaDevices.getUserMedia({
                 audio: true,
         });
@@ -116,7 +118,9 @@ export default class Timeline {
         const submitBtn = document.querySelector('.submit');
         const text = document.querySelector('.input');
         submitBtn.addEventListener('click', async (event) => {
-            event.preventDefault();
+            event.preventDefault(); 
+  
+                 
             const postCont = document.createElement('div');
             postCont.classList.add('post_cont');
             postCont.append(text.value);
@@ -124,56 +128,8 @@ export default class Timeline {
             
             this.currentPost = postCont;
             text.value = '';
-        })
-    }
- 
-
-    modalHTML(postCont) {
-        const modaleWindow = `
-        <div class="modale_window">
-            <p>
-                Что-то пошло не так!
-            </p>
-            <p>
-                Широта и долгота через запятую
-            </p>
-            <input type="text" class="input_modal">
-            <button class="submit">OK</button>
-            <button class="cancel">Отмена</button>
-        </div>`;
-
-        postCont.innerHTML += modaleWindow;
-    }
+        });
+    };
         
-    cancelBtn() {
-       
-        document.addEventListener('click', (event) => {
-            if(event.target.classList.contains('cancel')) {
-                event.preventDefault();
-                const modaleWindow = document.querySelector('.modale_window');
-                
-                modaleWindow.remove();
-            }
-            
-        })
-    }
-    submitBtn() {
-       
-        document.addEventListener('click', (event) => {
-            if(event.target.classList.contains('submit')) {
-                event.preventDefault();
-                const modaleWindow = document.querySelector('.modale_window');
-                const inputValue = modaleWindow.querySelector('.input_modal').value;
-                const valueCont = document.createElement('div');
-                valueCont.append(inputValue);
-                this.currentPost.append(this.validateCoords(inputValue));
-                this.currentPost = null;
-                
-                modaleWindow.remove();
-            }
-            
-        })
-    }
-
     
 }
