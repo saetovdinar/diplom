@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-
+const chat = require('../../db/db');
 
 const router = new Router();
 

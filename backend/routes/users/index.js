@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const users = require('../../db/db');
+const chat = require('../../db/db');
 
 const router = new Router();
 
@@ -9,14 +9,14 @@ router.post('/users', async (ctx) => {
   
     const {login, password} = ctx.request.body;
 
-      if(users.data.some(user => user.login === login)) {
+      if(chat.data.some(user => user.login === login)) {
         
         ctx.response.status = 400;
         ctx.response.body = {status: 'user exists'};
         return;
       }
   
-      users.add({
+      chat.add({
         login: login, 
         password: password});
   
@@ -31,8 +31,8 @@ router.delete('/users/:login', async (ctx) => {
   
   const {login} = ctx.params;
 
-  if(users.data.some(user => user.login === login)) {
-    users.data = users.data.filter(user => user.login !== login);
+  if(chat.data.some(user => user.login === login)) {
+    chat.data = chat.data.filter(user => user.login !== login);
   
     ctx.response.status = 200;
     ctx.response.body = {status: 'user deleted'};

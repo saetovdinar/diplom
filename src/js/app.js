@@ -1,7 +1,5 @@
-// TODO: write code here
 import Timeline from "./Timeline";
 
-const timeline = document.querySelector('.timeline');
 const timelineCont = document.querySelector('.timeline_cont');
 
 new Timeline(timelineCont);
@@ -9,38 +7,8 @@ new Timeline(timelineCont);
 
 
 
-
-
-
-
 const uploadForm = document.querySelector('.upload_file');
-const prewiewImg = document.querySelector('.prewiew');
 
-class SubscriptionApi {
-
-    constructor(apiUrl) {
-        this.apiUrl = apiUrl;
-    }
-
-    async add(user) {
-        const request = await fetch(this.apiUrl, {
-            method: 'POST',
-            body: user
-        })
-        const response = await request.json();
-
-        return response.status;
-    }
-    async delete(user) {
-        const request = await fetch(this.apiUrl + '/' + user.login , {
-            method: 'DELETE',
-           
-        })
-        const response = await request.json();
-
-        return response.status;
-    }
-}
 
 
 uploadForm.addEventListener('submit', (event) => {
@@ -76,21 +44,40 @@ uploadForm.addEventListener('submit', (event) => {
 //     console.log('message');
 // });
 
-const ws = new WebSocket('ws://localhost:7070/ws');
 
-ws.addEventListener('open', (event) => {
-    console.log(event);
 
-    console.log('ws open');
-});
-ws.addEventListener('close', (event) => {
-    console.log(event);
+// const ws = new WebSocket('ws://localhost:7070/ws');
+// sendMessage.addEventListener('click', (event) => {
+//     const message = input.value;
 
-    console.log('ws close');
-});
-ws.addEventListener('message', (event) => {
-    console.log(event);
+//     if(!message) return;
 
-    console.log('ws message');
-});
+//     ws.send(message )
+
+
+//     input.value = '';
+// });
+// ws.addEventListener('open', (event) => {
+//     console.log(event);
+
+//     console.log('ws open');
+// });
+// ws.addEventListener('error', (event) => {
+//     console.log(event);
+
+//     console.log('ws error');
+// });
+// ws.addEventListener('close', (event) => {
+//     console.log(event);
+
+//     console.log('ws close');
+// });
+// ws.addEventListener('message', (event) => {
+//     const data = JSON.parse(event.data);
+//     const {chat: meassages} = data;
+//     meassages.forEach((msg) => {
+//         timeline.append(msg )
+//     })
+ 
+// });
 

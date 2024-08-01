@@ -94,20 +94,19 @@ const server = http.createServer(app.callback())
 // const wsServer = new WS.Server({ server });
 
 
-
+// const chat = ['hi there']
 
 
 
 // wsServer.on('connection', (ws, req) => {
-//   ws.on('message', msg => {
-//     // console.log('msg');
-//     // ws.send('response');
-//     [...wsServer.clients]
-//     .filter(o => o.readyState === WS.OPEN)
-//     .forEach(o => o.send('some message'));
+//   ws.on('message', message => {
+//     chat.push(message)
+
+//     Array.from(wsServer.clients)
+//     .filter(client => client.readyState === WS.OPEN)
+//     .forEach(client => client.send(JSON.stringify({chat: [message]})));
 //   });
 
-//   ws.send('welcome');
 // });
 
 

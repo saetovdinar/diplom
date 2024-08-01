@@ -1,3 +1,7 @@
+import ChatApi from "./ChatApi";
+
+
+const api = new ChatApi('http://localhost:7070/users')
 export default class Timeline {
     constructor(container) {
         this.container = container;
@@ -119,8 +123,13 @@ export default class Timeline {
         const text = document.querySelector('.input');
         submitBtn.addEventListener('click', async (event) => {
             event.preventDefault(); 
-  
-                 
+            const body = new FormData();
+            body.append('login', 'admin');
+            body.append('password', '1232');
+            const response = api.add(body)
+            response.then(data => {
+                console.log(data)
+            })
             const postCont = document.createElement('div');
             postCont.classList.add('post_cont');
             postCont.append(text.value);

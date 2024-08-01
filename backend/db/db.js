@@ -1,8 +1,8 @@
-const users = {
+const chat = {
     data: [],
-    add(user) {
-        this.data.push(user);
-        this.listeners.forEach(handler => handler(user));
+    add(message) {
+        this.data.push(message);
+        this.listeners.forEach(handler => handler(message));
        
         
     },
@@ -12,4 +12,4 @@ const users = {
     }
 }
 
-module.exports = users
+module.exports = chat
