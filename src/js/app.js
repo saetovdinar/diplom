@@ -11,18 +11,6 @@ const uploadForm = document.querySelector('.upload_file');
 
 
 
-uploadForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const body = new FormData();
-    body.append('login', 'admin');
-    body.append('password', '1232');
-
-    const api = new SubscriptionApi('http://localhost:7070/users');
-    api.add(body)
-    // api.delete({login: 'admin'})
-
-})
 
 // const eventSource = new EventSource('http://localhost:7070/sse');
 

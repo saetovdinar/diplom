@@ -4,22 +4,22 @@ export default class ChatApi {
         this.apiUrl = apiUrl;
     }
 
-    async add(user) {
+    async add(message) {
         const request = await fetch(this.apiUrl, {
             method: 'POST',
-            body: user
+            body: message
         })
         const response = await request.json();
 
-        return response.status;
+        return response;
     }
-    async delete(user) {
-        const request = await fetch(this.apiUrl + '/' + user.login , {
-            method: 'DELETE',
+    // async delete(user) {
+    //     const request = await fetch(this.apiUrl + '/' + user.login , {
+    //         method: 'DELETE',
            
-        })
-        const response = await request.json();
+    //     })
+    //     const response = await request.json();
 
-        return response.status;
-    }
+    //     return response.status;
+    // }
 }

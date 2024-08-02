@@ -3,9 +3,9 @@ const chat = require('../../db/db');
 
 const router = new Router();
 
-router.get('/index', async (ctx) => {
+router.get('/upload/chat', async (ctx) => {
     ctx.response.set('Access-Control-Allow-Origin', '*');
-    ctx.response.body = 'index';
+    ctx.response.body = chat.data;
   });
 
 

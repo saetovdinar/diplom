@@ -1,7 +1,7 @@
 import ChatApi from "./ChatApi";
 
 
-const api = new ChatApi('http://localhost:7070/users')
+const api = new ChatApi('http://localhost:7070/chat')
 export default class Timeline {
     constructor(container) {
         this.container = container;
@@ -124,8 +124,8 @@ export default class Timeline {
         submitBtn.addEventListener('click', async (event) => {
             event.preventDefault(); 
             const body = new FormData();
-            body.append('login', 'admin');
-            body.append('password', '1232');
+            body.append('message', text.value);
+
             const response = api.add(body)
             response.then(data => {
                 console.log(data)
