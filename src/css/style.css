@@ -13,14 +13,24 @@
   outline: none;
   width: 100%;
 }
+.download_btn {
+  width: 40px;
+  height: 40px;
+  border: #495057 1px solid;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  cursor: pointer;
+}
 
-
-.timeline_cont {
+.chat_cont {
   width: 500px;
   height: 500px;
 }
  
-.timeline {
+.chat {
   width: 500px;
   padding: 15px;
   overflow: auto;
@@ -28,7 +38,7 @@
   height: 500px;
 }
 
-.timeline_input_cont {
+.chat_input_cont {
   display: flex;
   align-items: end;
   border: 1px solid #ced4da;

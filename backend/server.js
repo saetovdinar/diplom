@@ -13,7 +13,7 @@ const app = new Koa();
 
 const public = path.join(__dirname, 'public');
 
-app.use(koaStatic(public));
+app.use(koaStatic(public));  
 
 app.use(koaBody({ 
     urlencoded: true,
@@ -92,9 +92,6 @@ app.use(router());
 const port = process.env.PORT || 7070;
 const server = http.createServer(app.callback())
 // const wsServer = new WS.Server({ server });
-
-
-// const chat = ['hi there']
 
 
 

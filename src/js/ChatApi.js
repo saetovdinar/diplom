@@ -4,8 +4,15 @@ export default class ChatApi {
         this.apiUrl = apiUrl;
     }
 
+    async getChat() {
+        const request = await fetch(this.apiUrl + '/upload/chat')
+        const response = await request.json();
+
+        return response;
+    }
+
     async add(message) {
-        const request = await fetch(this.apiUrl, {
+        const request = await fetch(this.apiUrl + '/chat', {
             method: 'POST',
             body: message
         })
@@ -13,13 +20,7 @@ export default class ChatApi {
 
         return response;
     }
-    // async delete(user) {
-    //     const request = await fetch(this.apiUrl + '/' + user.login , {
-    //         method: 'DELETE',
-           
-    //     })
-    //     const response = await request.json();
 
-    //     return response.status;
-    // }
+  
+  
 }

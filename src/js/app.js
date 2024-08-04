@@ -1,16 +1,9 @@
-import Timeline from "./Timeline";
-
-const timelineCont = document.querySelector('.timeline_cont');
-
-new Timeline(timelineCont);
+import Chat from "./Chat";
 
 
+const chatCont = document.querySelector('.chat_cont');
 
-
-const uploadForm = document.querySelector('.upload_file');
-
-
-
+new Chat(chatCont);
 
 // const eventSource = new EventSource('http://localhost:7070/sse');
 
