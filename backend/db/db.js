@@ -18,10 +18,32 @@ const chat = {
        
         
     ],
+
+    temporaryStorage: [],
     
+    clearTemporary() {
+        this.temporaryStorage = [];
+    },
+
     add(message) {
         this.data.push(message);
     },
+
+    lazyLoad() {
+
+        for(const i= 0; i < 10; i++) {
+            if(!this.copyOfData.pop()) {
+                return;
+            }
+            this.temporaryStorage.push(this.copyOfData.pop())
+        } 
+        return this.temporaryStorage;
+    },
+
+    copyOfData() {
+        this.copyOfData = Array.from(this.data);
+        return this.copyOfData;
+    }
     
 }
 
