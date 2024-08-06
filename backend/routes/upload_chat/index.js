@@ -5,7 +5,12 @@ const router = new Router();
 
 router.get('/upload/chat', async (ctx) => {
     ctx.response.set('Access-Control-Allow-Origin', '*');
-    ctx.response.body = chat.data;
+    chat.copyData();
+    console.log(chat.copyOfData)
+    const temporary = chat.lazyLoad();
+    console.log(temporary)
+    
+    ctx.response.body = temporary;
   });
 
 

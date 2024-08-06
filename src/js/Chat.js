@@ -18,6 +18,7 @@ export default class Chat {
         this.api = new ChatApi('http://localhost:7070')
 
         this.renderChatStorage();
+        this.lazyLoad();
         this.DragNDrop();
        
     }
@@ -56,7 +57,65 @@ export default class Chat {
            
           })
     }
-
+    lazyLoad() {
+        this.chat.addEventListener('scroll' , () => {
+            console.log(this.chat.scrollTop)
+            if(this.chat.scrollTop === 0) {
+               
+                this.api.getChat()
+                .then(data => {
+                    data.forEach(msg => {
+               
+        
+                        if(msg.message.indexOf('http') != -1 && msg.message.indexOf('blob') != -1) {
+                            let contentCont;
+                            if(msg.type === 'image') {
+                                contentCont = document.createElement('img');
+                                contentCont.src = msg.message;
+                                
+                            }
+                            if(msg.type === 'video') {
+                                contentCont = document.createElement('video');
+                                contentCont.src = msg.message;
+                                contentCont.controls = true;
+                            }
+                            if(msg.type === 'audio') {
+                                contentCont = document.createElement('audio');
+                                contentCont.src = msg.message;
+                                contentCont.controls = true;
+                            }
+                            const postCont = document.createElement('div');
+                            postCont.classList.add('post_cont');
+                            postCont.append(contentCont);
+                            this.chat.prepend(postCont)
+                            return;
+                        }
+        
+        
+                        if(msg.message.indexOf('http') != -1) {
+                            const linkTag = document.createElement('a');
+                            linkTag.href = msg.message;
+                            linkTag.append(msg.message);
+                            const postCont = document.createElement('div');
+                            postCont.classList.add('post_cont');
+                            postCont.append(linkTag);
+                            this.chat.prepend(postCont)
+                            return;
+                        }
+        
+                        const postCont = document.createElement('div');
+                        postCont.classList.add('post_cont');
+                        postCont.append(msg.message);
+                        this.chat.prepend(postCont)
+                    })
+                   
+                })
+            }
+        })
+       
+       
+       
+    }
     renderChatStorage() {
         this.api.getChat()
         .then(data => {
@@ -83,7 +142,7 @@ export default class Chat {
                     const postCont = document.createElement('div');
                     postCont.classList.add('post_cont');
                     postCont.append(contentCont);
-                    this.chat.append(postCont)
+                    this.chat.prepend(postCont)
                     return;
                 }
 
@@ -95,14 +154,14 @@ export default class Chat {
                     const postCont = document.createElement('div');
                     postCont.classList.add('post_cont');
                     postCont.append(linkTag);
-                    this.chat.append(postCont)
+                    this.chat.prepend(postCont)
                     return;
                 }
 
                 const postCont = document.createElement('div');
                 postCont.classList.add('post_cont');
                 postCont.append(msg.message);
-                this.chat.append(postCont)
+                this.chat.prepend(postCont)
             })
             this.chat.scrollTop += this.chat.scrollHeight;
         })

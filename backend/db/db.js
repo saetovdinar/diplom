@@ -14,12 +14,84 @@ const chat = {
         {
             message: 'https://netology.ru/profile', 
             type: 'text'
+        }, 
+        {
+            message: '3', 
+            type: 'text'
+        }, 
+        {
+            message: '4', 
+            type: 'text'
         },
-       
-        
+        {
+            message: '5', 
+            type: 'text'
+        }, 
+        {
+            message: '6', 
+            type: 'text'
+        }, 
+        {
+            message: '7', 
+            type: 'text'
+        },
+        {
+            message: '8', 
+            type: 'text'
+        }, 
+        {
+            message: '9', 
+            type: 'text'
+        }, 
+        {
+            message: '10', 
+            type: 'text'
+        },
+        {
+            message: '11', 
+            type: 'text'
+        }, 
+        {
+            message: '12', 
+            type: 'text'
+        }, 
+        {
+            message: '13', 
+            type: 'text'
+        },
+        {
+            message: '14', 
+            type: 'text'
+        }, 
+        {
+            message: '15', 
+            type: 'text'
+        }, 
+        {
+            message: '16', 
+            type: 'text'
+        },
+        {
+            message: '17', 
+            type: 'text'
+        }, 
+        {
+            message: '18', 
+            type: 'text'
+        }, 
+        {
+            message: '19', 
+            type: 'text'
+        },
+        {
+            message: '20', 
+            type: 'text'
+        }, 
     ],
+    copied : false,
 
-    temporaryStorage: [],
+    copyOfData: [],
+
     
     clearTemporary() {
         this.temporaryStorage = [];
@@ -27,22 +99,27 @@ const chat = {
 
     add(message) {
         this.data.push(message);
+        this.copyOfData.push(message)
     },
 
     lazyLoad() {
-
-        for(const i= 0; i < 10; i++) {
-            if(!this.copyOfData.pop()) {
-                return;
-            }
-            this.temporaryStorage.push(this.copyOfData.pop())
+        const temporaryStorage =[];
+        for(let i= 0; i < 10; i++) {
+          
+            temporaryStorage.push(...this.copyOfData.splice(-1, 1)) 
         } 
-        return this.temporaryStorage;
+        
+
+        return temporaryStorage;
     },
 
-    copyOfData() {
+    copyData() {
+        if( this.copied === true) {
+            return;
+        }
         this.copyOfData = Array.from(this.data);
-        return this.copyOfData;
+        this.copied = true;
+        
     }
     
 }
