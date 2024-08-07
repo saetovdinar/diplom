@@ -7,7 +7,7 @@ const WS = require('ws');
 const router = require('./routes');
 const fs = require('fs');
 const uuid = require('uuid');
-
+const chat = require('./db/db');
 const app = new Koa();
 
 
@@ -91,20 +91,10 @@ app.use(router());
 
 const port = process.env.PORT || 7070;
 const server = http.createServer(app.callback())
-// const wsServer = new WS.Server({ server });
 
 
 
-// wsServer.on('connection', (ws, req) => {
-//   ws.on('message', message => {
-//     chat.push(message)
 
-//     Array.from(wsServer.clients)
-//     .filter(client => client.readyState === WS.OPEN)
-//     .forEach(client => client.send(JSON.stringify({chat: [message]})));
-//   });
-
-// });
 
 
 
