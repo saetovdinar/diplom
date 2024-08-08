@@ -93,6 +93,16 @@ const port = process.env.PORT || 7070;
 const server = http.createServer(app.callback())
 
 
+const wsServer = new WS.Server({
+  server
+});
+
+wsServer.on('connection' , (ws) => {
+  ws.on('message', (e) => {
+    console.log(e);
+  });
+  ws.send(JSON.stringify(chat.data))
+});
 
 
 

@@ -25,12 +25,89 @@ export default class Chat {
 
         this.api = new ChatApi('http://localhost:7070')
 
-        this.renderChatStorage();
+        // this.renderChatStorage();
        
   
        
     }
 
+    wsEvents() {
+        const ws = new WebSocket('ws://localhost:7070/ws')
+        this.submitBtn.addEventListener('click', () => {
+            const msg = this.text.value;
+
+            ws.send(msg)
+
+            this.text.value = '';
+        })
+        ws.addEventListener('open' , (e) => {
+      
+
+            console.log('ws open');
+        });
+
+        ws.addEventListener('error' , (e) => {
+      
+
+             console.log('ws error');
+        });
+
+        ws.addEventListener('close' , (e) => {
+     
+
+            console.log('ws close');
+        });
+
+        ws.addEventListener('message' , (e) => {
+            console.log('ws message');
+            console.log(e.data);
+            JSON.parse(e.data).forEach(msg => {
+       
+
+                if(msg.message.indexOf('http') != -1 && msg.message.indexOf('blob') != -1) {
+                    let contentCont;
+                    if(msg.type === 'image') {
+                        contentCont = document.createElement('img');
+                        contentCont.src = msg.message;
+                        
+                    }
+                    if(msg.type === 'video') {
+                        contentCont = document.createElement('video');
+                        contentCont.src = msg.message;
+                        contentCont.controls = true;
+                    }
+                    if(msg.type === 'audio') {
+                        contentCont = document.createElement('audio');
+                        contentCont.src = msg.message;
+                        contentCont.controls = true;
+                    }
+                    const postCont = document.createElement('div');
+                    postCont.classList.add('post_cont');
+                    postCont.append(contentCont);
+                    this.chat.prepend(postCont)
+                    return;
+                }
+
+
+                if(msg.message.indexOf('http') != -1) {
+                    const linkTag = document.createElement('a');
+                    linkTag.href = msg.message;
+                    linkTag.append(msg.message);
+                    const postCont = document.createElement('div');
+                    postCont.classList.add('post_cont');
+                    postCont.append(linkTag);
+                    this.chat.prepend(postCont)
+                    return;
+                }
+
+                const postCont = document.createElement('div');
+                postCont.classList.add('post_cont');
+                postCont.append(msg.message);
+                this.chat.append(postCont)
+            })
+            
+        });
+    }
     
     DragNDrop() {
         this.container.addEventListener('dragover', (event) => {
@@ -194,6 +271,7 @@ export default class Chat {
         this.loadFile();
         this.lazyLoad();
         this.DragNDrop();
+        this.wsEvents();
     }
     loadFile() {
         this.fileLoad.addEventListener('change', (event) => {
