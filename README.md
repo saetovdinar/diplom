@@ -14,6 +14,6 @@
 
 ОПИСАНИЕ ФУНКЦИЙ: 
 
-(https://github.com/saetovdinar/diplom/raw/main/src/media/audio.png)
+!(https://github.com/saetovdinar/diplom/raw/main/src/media/audio.png)
 
 
