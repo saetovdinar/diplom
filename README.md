@@ -14,9 +14,6 @@
 
 ОПИСАНИЕ ФУНКЦИЙ: 
 
-![Image alt](https://github.com/saetovdinar/diplom/raw/main/src/media/audio.png)
+(https://github.com/saetovdinar/diplom/raw/main/src/media/audio.png)
 
-{saetovdinar} — ваш ник на ГитХабе;
-{diplom} — репозиторий где хранятся картинки;
-{main} — ветка репозитория;
-{path} — путь к месту нахождения картинки.
+
