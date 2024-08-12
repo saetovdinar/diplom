@@ -12,14 +12,19 @@ export default class Chat {
 
         this.fileLoadBtn = document.querySelector('.overlap');
         this.fileLoad = document.querySelector('.file_load');
-        
+
+        this.recordVideoBtn = document.querySelector('.video_record');
+        this.stopVideoBtn = document.querySelector('.video_stop');
+
+        this.recordAudioBtn = document.querySelector('.audio_record');
+        this.stopAudioBtn = document.querySelector('.audio_stop');
         this.eventRegister();
+
 
         this.api = new ChatApi('http://localhost:7070')
 
         this.renderChatStorage();
-        this.lazyLoad();
-        this.DragNDrop();
+
        
     }
 
@@ -35,16 +40,19 @@ export default class Chat {
             let contentCont;
             if(file.type.indexOf('image') != -1) {
                 contentCont = document.createElement('img');
+                contentCont.classList.add('content_cont');
                 contentCont.src = url;
                     
             }
             if(file.type.indexOf('video') != -1) {
                 contentCont = document.createElement('video');
+                contentCont.classList.add('content_cont');
                 contentCont.src = url;
                 contentCont.controls = true;
             }
             if(file.type.indexOf('audio') != -1) {
                 contentCont = document.createElement('audio');
+                contentCont.classList.add('content_cont');
                 contentCont.src = url;
                 contentCont.controls = true;
             }
@@ -166,11 +174,29 @@ export default class Chat {
             this.chat.scrollTop += this.chat.scrollHeight;
         })
     }
+
+
+    postGeo(postCont) {
+        
+        const geoCont = document.createElement('div');
+        geoCont.classList.add('geo_cont');
+        navigator.geolocation.getCurrentPosition((data) => {
+            const {latitude, longitude} = data.coords;
+            geoCont.append(`[${latitude}, ${longitude}]`)
+            postCont.append(geoCont);
+           data.coords
+        })
+        
+        
+    }
+ 
     eventRegister() {
         this.videoPost();
         this.audioPost();
         this.textPost();
         this.loadFile();
+        this.lazyLoad();
+        this.DragNDrop();
     }
     loadFile() {
         this.fileLoad.addEventListener('change', (event) => {
@@ -191,17 +217,20 @@ export default class Chat {
 
             if(file.type.indexOf('image') != -1) {
                 contentCont = document.createElement('img');
+                contentCont.classList.add('content_cont');
                 body.append('message', url);
                 body.append('type', 'image');
             }
             if(file.type.indexOf('video') != -1) {
                 contentCont = document.createElement('video');
+                contentCont.classList.add('content_cont');
                 contentCont.controls = true;
                 body.append('message', url);
                 body.append('type', 'video');
             }
             if(file.type.indexOf('audio') != -1) {
                 contentCont = document.createElement('audio');
+                contentCont.classList.add('content_cont');
                 contentCont.controls = true;
                 body.append('message', url);
                 body.append('type', 'audio');
@@ -228,7 +257,8 @@ export default class Chat {
                 link.download = file.name;
                 link.click();
             });
-            
+            this.currentPost = postCont;
+            this.postGeo(this.currentPost);
            
             postCont.append(contentCont)
             postCont.append(downloadBtn)
@@ -239,67 +269,94 @@ export default class Chat {
 
     )}
 
+    createPLayer(type) {
+        const player = document.createElement(type);
+        player.classList.add(type);
+        player.setAttribute('controls', 'controls');
+    
+        const postCont = document.createElement('div');
+        postCont.classList.add('post_cont');
+    
+        postCont.append(player);
+
+        return [postCont, player];
+    }
+     
+    recorder(media, chunk, player) {
+                const recorder = new MediaRecorder(media);
+                
+    
+               
+              
+                recorder.addEventListener('dataavailable', (event) => {
+                    chunk.push(event.data)
+                });
+                recorder.addEventListener('stop', () => {
+                    const blob = new Blob(chunk)
+                   
+                    player.src = URL.createObjectURL(blob);
+                   
+                });
+                recorder.start();
+                return recorder;
+    }
+       
+    createDownloadBtn(chunk, format) {
+            const downloadBtn = document.createElement('div');
+            downloadBtn.classList.add('download_btn');
+    
+            downloadBtn.innerHTML = '&#129095';
+    
+    
+            downloadBtn.addEventListener('click', (event) => {
+                const blob = new Blob(chunk)
+       
+           
+                const link = document.createElement('a');
+                link.href =  URL.createObjectURL(blob);;
+                link.rel = 'noopener';
+                link.download = format;
+                link.click();
+            
+            });
+            return downloadBtn;
+    }
+
     videoPost() {
-        const recordVideoBtn = document.querySelector('.video_record');
-        const stopVideoBtn = document.querySelector('.video_stop');
-        
-        recordVideoBtn.addEventListener('click', async (event) => {
+            
+            
+        this.recordVideoBtn.addEventListener('click', async (event) => {
             event.preventDefault();
-            recordVideoBtn.style.display = 'none';
-            stopVideoBtn.style.display = 'block';
+            this.recordVideoBtn.style.display = 'none';
+            this.stopVideoBtn.style.display = 'block';
             
             const media = await navigator.mediaDevices.getUserMedia({
                 video: true,
         });
-            const videoPlayer = document.createElement('video');
-            videoPlayer.classList.add('video');
-            const postCont = document.createElement('div');
-            postCont.classList.add('post_cont');
-            postCont.append(videoPlayer);
-
-            const downloadBtn = document.createElement('div');
-            downloadBtn.classList.add('download_btn');
-
-            downloadBtn.innerHTML = '&#129095';
-
-
-            downloadBtn.addEventListener('click', (event) => {
-                const blob = new Blob(chunk)
+            
+            const [postCont, player] = this.createPLayer('video');
+            
+          
            
-               
-                const link = document.createElement('a');
-                link.href =  URL.createObjectURL(blob);;
-                link.rel = 'noopener';
-                link.download = 'video.mp4';
-                link.click();
-                
-            });
-            postCont.append(downloadBtn)
-            videoPlayer.setAttribute('controls', 'controls');
-            this.chat.append(postCont);
-            this.chat.scrollTop += postCont.offsetHeight ;
             this.currentPost = postCont;
-           
-            const recorder = new MediaRecorder(media);
+
+            this.postGeo(this.currentPost);
+
             const chunk = [];
+            const record = this.recorder(media, chunk,player);
 
+            const downloadBtn = this.createDownloadBtn(chunk, 'video.mp4');
+
+            postCont.append(downloadBtn);
+            this.chat.append(postCont);
+
+            this.chat.scrollTop += postCont.offsetHeight ;
            
-            recorder.addEventListener('dataavailable', (event) => {
-                chunk.push(event.data)
-            });
-            recorder.addEventListener('stop', () => {
-                const blob = new Blob(chunk)
-               
-                videoPlayer.src = URL.createObjectURL(blob);
-               
-            });
-            recorder.start();
-
-            stopVideoBtn.addEventListener('click', async (event) => {
+            this.stopVideoBtn.addEventListener('click', async (event) => {
                 event.preventDefault();
-                recordVideoBtn.style.display = 'block';
-                stopVideoBtn.style.display = 'none';
-                recorder.stop();
+                this.recordVideoBtn.style.display = 'block';
+                this.stopVideoBtn.style.display = 'none';
+                record.stop();
                 media.getTracks().forEach(track => track.stop());
        
             })
@@ -308,72 +365,48 @@ export default class Chat {
 
     audioPost() {
         
-        const recordAudioBtn = document.querySelector('.audio_record');
-        const stopAudioBtn = document.querySelector('.audio_stop');
        
-        recordAudioBtn.addEventListener('click', async (event) => {
+       
+        this.recordAudioBtn.addEventListener('click', async (event) => {
             event.preventDefault();
 
-            recordAudioBtn.style.display = 'none';
-            stopAudioBtn.style.display = 'block';
+            this.recordAudioBtn.style.display = 'none';
+            this.stopAudioBtn.style.display = 'block';
 
             const media = await navigator.mediaDevices.getUserMedia({
                 audio: true,
         });
-      
-        const audioPlayer = document.createElement('audio');
-        const postCont = document.createElement('div');
-        postCont.classList.add('post_cont');
-        audioPlayer.classList.add('audio');
-        postCont.append(audioPlayer);
-
-        const downloadBtn = document.createElement('div');
-        downloadBtn.classList.add('download_btn');
-
-        downloadBtn.innerHTML = '&#129095';
 
 
-        downloadBtn.addEventListener('click', (event) => {
-            const blob = new Blob(chunk)
+        const [postCont, player] = this.createPLayer('audio');
+            
+          
            
-               
-            const link = document.createElement('a');
-            link.href =  URL.createObjectURL(blob);;
-            link.rel = 'noopener';
-            link.download = 'audio.mp3';
-            link.click();
-                
-        });
-        postCont.append(downloadBtn)
-      
-        audioPlayer.setAttribute('controls', 'controls');
-        this.chat.append(postCont);
-        this.chat.scrollTop += postCont.offsetHeight ;
-        this.currentPost = postCont;
-        const recorder = new MediaRecorder(media);
-        const chunk = [];
+            this.currentPost = postCont;
 
-   
-        recorder.addEventListener('dataavailable', (event) => {
-            chunk.push(event.data)
-           
-        });
-        recorder.addEventListener('stop', () => {
-            const blob = new Blob(chunk)
-           
-            const urlBlob =  URL.createObjectURL(blob);
-            audioPlayer.src = urlBlob;
-           
-        });
-        recorder.start();
+            this.postGeo(this.currentPost);
 
-        stopAudioBtn.addEventListener('click', async (event) => {
+            const chunk = [];
+            const record = this.recorder(media, chunk, player);
+
+            const downloadBtn = this.createDownloadBtn(chunk, 'audio.mp3');
+
+            postCont.append(downloadBtn);
+            this.chat.append(postCont);
+            
+            this.chat.scrollTop += postCont.offsetHeight ;
+
+
+
+    
+
+        this.stopAudioBtn.addEventListener('click', async (event) => {
             event.preventDefault();
 
-            recordAudioBtn.style.display = 'block';
-            stopAudioBtn.style.display = 'none';
+            this.recordAudioBtn.style.display = 'block';
+            this.stopAudioBtn.style.display = 'none';
 
-            recorder.stop();
+            record.stop();
             media.getTracks().forEach(track => track.stop());
            
        
